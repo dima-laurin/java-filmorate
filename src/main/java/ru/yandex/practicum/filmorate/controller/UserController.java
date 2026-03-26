@@ -54,7 +54,7 @@ public class UserController {
             throw new ValidationException("Не указан id");
         }
 
-        if (!users.containsKey(user.getId())) {
+        if (!userExists(user.getId())) {
             throw new ValidationException("Пользователь не найден");
         }
 
@@ -74,13 +74,17 @@ public class UserController {
         return user;
     }
 
-        private Long getNextId() {
-            long currentMaxId = users.keySet()
-                    .stream()
-                    .mapToLong(id -> id)
-                    .max()
-                    .orElse(0);
-            return ++currentMaxId;
-        }
+    private Long getNextId() {
+        long currentMaxId = users.keySet()
+                .stream()
+                .mapToLong(id -> id)
+                .max()
+                .orElse(0);
+        return ++currentMaxId;
     }
+
+    private boolean userExists(Long id) {
+        return users.containsKey(id);
+    }
+}
 

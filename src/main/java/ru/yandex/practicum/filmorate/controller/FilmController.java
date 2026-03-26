@@ -47,7 +47,7 @@ public class FilmController {
             throw new ValidationException("Не указан id фильма");
         }
 
-        if (!films.containsKey(film.getId())) {
+        if (!filmExists(film.getId())) {
             throw new ValidationException("Id не найден");
         }
 
@@ -67,6 +67,10 @@ public class FilmController {
                 .max()
                 .orElse(0);
         return ++currentMaxId;
+    }
+
+    private boolean filmExists(Long id) {
+        return films.containsKey(id);
     }
 
 }
