@@ -93,22 +93,17 @@ public class UserService {
     public List<User> getFriends(Long userId) {
         User user = getById(userId);
 
-        List<User> friends = user.getFriends().stream()
-                .map(this::getById)
-                .collect(Collectors.toList());
+        List<User> friends = userStorage.getByIds(user.getFriends());
 
         log.info("Получен список друзей пользователя id={}, количество={}", userId, friends.size());
         return friends;
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) {
-        User user = getById(userId);
-        User other = getById(otherId);
+        getById(userId);
+        getById(otherId);
 
-        List<User> commonFriends = user.getFriends().stream()
-                .filter(other.getFriends()::contains)
-                .map(this::getById)
-                .collect(Collectors.toList());
+        List<User> commonFriends = userStorage.getCommonFriends(userId, otherId);
 
         log.info("Получен список общих друзей пользователей {} и {}, количество={}",
                 userId, otherId, commonFriends.size());

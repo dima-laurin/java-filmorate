@@ -36,13 +36,13 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info("Запрос на создание фильма: {}", film);
+        log.info("Запрос на создание фильма");
         return filmService.create(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info("Запрос на обновление фильма: {}", film);
+        log.info("Запрос на обновление фильма");
         return filmService.update(film);
     }
 

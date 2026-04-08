@@ -95,11 +95,7 @@ public class FilmService {
     }
 
     public List<Film> getPopularFilms(int count) {
-        List<Film> popularFilms = filmStorage.findAll().stream()
-                .sorted(Comparator.comparingInt((Film f) -> f.getLikes().size()).reversed())
-                .limit(count)
-                .collect(Collectors.toList());
-
+        List<Film> popularFilms = filmStorage.getPopularFilms(count);
         log.info("Получен список популярных фильмов, count={}", count);
         return popularFilms;
     }
