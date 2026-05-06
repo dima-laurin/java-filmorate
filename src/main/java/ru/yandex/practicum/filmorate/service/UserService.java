@@ -8,8 +8,8 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
 import java.util.Collection;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -65,49 +65,48 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-        User user = getById(userId);
-        User friend = getById(friendId);
+        log.info("Добавление в друзья: userId={}, friendId={}", userId, friendId);
 
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        getById(userId);
+        getById(friendId);
 
-        userStorage.update(user);
-        userStorage.update(friend);
+        userStorage.addFriend(userId, friendId);
 
-        log.info("Пользователи {} и {} добавлены в друзья", userId, friendId);
+        log.info("Пользователь {} добавил в друзья {}", userId, friendId);
     }
 
     public void removeFriend(Long userId, Long friendId) {
-        User user = getById(userId);
-        User friend = getById(friendId);
+        log.info("Удаление из друзей: userId={}, friendId={}", userId, friendId);
 
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
+        getById(userId);
+        getById(friendId);
 
-        userStorage.update(user);
-        userStorage.update(friend);
+        userStorage.removeFriend(userId, friendId);
 
-        log.info("Пользователи {} и {} удалены из друзей", userId, friendId);
+        log.info("Пользователь {} удалил из друзей {}", userId, friendId);
     }
 
     public List<User> getFriends(Long userId) {
-        User user = getById(userId);
+        log.info("Получение друзей пользователя id={}", userId);
 
-        List<User> friends = userStorage.getByIds(user.getFriends());
+        getById(userId);
 
-        log.info("Получен список друзей пользователя id={}, количество={}", userId, friends.size());
+        List<User> friends = userStorage.getFriends(userId);
+
+        log.info("Найдено друзей: {}", friends.size());
         return friends;
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) {
+        log.info("Поиск общих друзей: userId={}, otherId={}", userId, otherId);
+
         getById(userId);
         getById(otherId);
 
-        List<User> commonFriends = userStorage.getCommonFriends(userId, otherId);
+        List<User> common = userStorage.getCommonFriends(userId, otherId);
 
-        log.info("Получен список общих друзей пользователей {} и {}, количество={}",
-                userId, otherId, commonFriends.size());
-        return commonFriends;
+        log.info("Общих друзей найдено: {}", common.size());
+        return common;
     }
 
     private void validateUser(User user) {
