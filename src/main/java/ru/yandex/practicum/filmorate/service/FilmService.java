@@ -15,6 +15,8 @@ import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -116,18 +118,26 @@ public class FilmService {
     private void validateMpaAndGenres(Film film) {
         Integer mpaId = film.getMpa().getId();
 
-        if (mpaId == null || mpaStorage.getById(mpaId) == null) {
+        if (mpaId == null || !mpaStorage.existsById(mpaId)) {
             throw new NotFoundException("MPA не найден");
         }
 
-        if (film.getGenres() == null) {
+        if (film.getGenres() == null || film.getGenres().isEmpty()) {
             return;
         }
 
-        for (Genre genre : film.getGenres()) {
-            if (genre == null || genre.getId() <= 0 || genreStorage.getGenreById(genre.getId()) == null) {
-                throw new NotFoundException("Жанр не найден");
-            }
+        Set<Integer> genreIds = film.getGenres().stream()
+                .map(Genre::getId)
+                .collect(Collectors.toSet());
+
+        if (genreIds.stream().anyMatch(id -> id <= 0)) {
+            throw new NotFoundException("Жанр не найден");
+        }
+
+        List<Genre> existingGenres = genreStorage.getGenresByIds(genreIds);
+
+        if (existingGenres.size() != genreIds.size()) {
+            throw new NotFoundException("Жанр не найден");
         }
     }
 }

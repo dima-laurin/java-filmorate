@@ -31,7 +31,7 @@ public class UserController {
     @GetMapping("/{id}")
     public User getById(@PathVariable Long id) {
         log.info("Запрос на пользователя с id={}", id);
-        return userService.getById(id);
+        return userService.checkUserExists(id);
     }
 
     @PostMapping

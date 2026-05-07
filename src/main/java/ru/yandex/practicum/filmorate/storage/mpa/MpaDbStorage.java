@@ -34,4 +34,13 @@ public class MpaDbStorage implements MpaStorage {
         List<Mpa> result = jdbcTemplate.query(sql, mapper, id);
         return result.isEmpty() ? null : result.get(0);
     }
+
+    @Override
+    public boolean existsById(int id) {
+        String sql = "SELECT COUNT(*) FROM mpa WHERE id = ?";
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+
+        return count != null && count > 0;
+    }
 }

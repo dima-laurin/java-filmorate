@@ -55,7 +55,7 @@ public class UserService {
         return updatedUser;
     }
 
-    public User getById(Long id) {
+    public User checkUserExists(Long id) {
         User user = userStorage.getById(id);
         if (user == null) {
             throw new NotFoundException("Пользователь не найден");
@@ -67,8 +67,8 @@ public class UserService {
     public void addFriend(Long userId, Long friendId) {
         log.info("Добавление в друзья: userId={}, friendId={}", userId, friendId);
 
-        getById(userId);
-        getById(friendId);
+        checkUserExists(userId);
+        checkUserExists(friendId);
 
         userStorage.addFriend(userId, friendId);
 
@@ -78,8 +78,8 @@ public class UserService {
     public void removeFriend(Long userId, Long friendId) {
         log.info("Удаление из друзей: userId={}, friendId={}", userId, friendId);
 
-        getById(userId);
-        getById(friendId);
+        checkUserExists(userId);
+        checkUserExists(friendId);
 
         userStorage.removeFriend(userId, friendId);
 
@@ -89,7 +89,7 @@ public class UserService {
     public List<User> getFriends(Long userId) {
         log.info("Получение друзей пользователя id={}", userId);
 
-        getById(userId);
+        checkUserExists(userId);
 
         List<User> friends = userStorage.getFriends(userId);
 
@@ -100,8 +100,8 @@ public class UserService {
     public List<User> getCommonFriends(Long userId, Long otherId) {
         log.info("Поиск общих друзей: userId={}, otherId={}", userId, otherId);
 
-        getById(userId);
-        getById(otherId);
+        checkUserExists(userId);
+        checkUserExists(otherId);
 
         List<User> common = userStorage.getCommonFriends(userId, otherId);
 
